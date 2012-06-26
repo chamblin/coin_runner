@@ -10,7 +10,7 @@ class Mobile(pygame.sprite.Sprite):
 	
 	def __init__(self, pos, **kwargs):
 		pygame.sprite.Sprite.__init__(self)
-		self.__images = None
+		self._frames = None
 		
 		self.face(Mobile.FACING_DOWN)
 		self.stop()
@@ -77,9 +77,4 @@ class Mobile(pygame.sprite.Sprite):
 		self.image = self._images()[self._frame]
 		
 	def _images(self):
-		if self.__images is None:
-			self.__images = load_sliced_sprites("hero.png", 64, 64)
-		if self._moving:
-			return self.__images[self._facing][1:]
-		else:
-			return self.__images[self._facing][0:1]
+		return []

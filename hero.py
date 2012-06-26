@@ -7,6 +7,8 @@ class Hero(mobile.Mobile):
 	def __init__(self, pos, **kwargs):
 		super(Hero, self).__init__(pos, **kwargs)
 		
+		self._frames = None
+		
 		self.__walking_sounds = None
 		self.__walking_step = 0
 		
@@ -56,4 +58,12 @@ class Hero(mobile.Mobile):
 			self.__walking_sounds = [load_sound(sound_file) for sound_file in ["step_sound1.wav", "step_sound2.wav"]]
 		self.__walking_step = (self.__walking_step + 1) % len(self.__walking_sounds)
 		return self.__walking_sounds[self.__walking_step]
+		
+	def _images(self):
+		if self._frames is None:
+			self._frames = load_sliced_sprites("hero.png", 64, 64)
+		if self._moving:
+			return self._frames[self._facing][1:]
+		else:
+			return self._frames[self._facing][0:1]
 			
