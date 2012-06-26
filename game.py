@@ -2,11 +2,15 @@ import os, sys
 import pygame
 from pygame.locals import *
 from utility import *
+
+from globals import Globals
+
 from background import Background
 from coin import Coin
 from hero import Hero
 from hud import HUD
-from globals import Globals
+
+from bee import Bee
 
 if not pygame.font: print "Warning: fonts disabled"
 if not pygame.mixer: print "Warning: sound disabled"
@@ -19,6 +23,10 @@ class Game:
 		self.__coins = None
 		self.__hero = None
 		self.__hero_group = None
+		
+		self.__monsters = None
+		self.__monsters_group = None
+		
 		self._setup_screen()
 		
 	def run(self):
@@ -29,6 +37,7 @@ class Game:
 			clock.tick()
 			
 			self._draw_background()
+			self._draw_monsters()
 			self._draw_hero()
 			self._draw_coins()
 			self._draw_hud()
@@ -59,11 +68,18 @@ class Game:
 		coins.update(pygame.time.get_ticks())
 		coins.draw(self._screen())
 		
+	def _draw_monsters(self):
+		monsters = self.monsters()
+		monsters_group = pygame.sprite.RenderUpdates(monsters)
+		monsters_group.update(pygame.time.get_ticks())
+		[monster.start_moving() for monster in monsters]
+		monsters_group.draw(self._screen())
+		
 	def _draw_hud(self):
 		hud = HUD(self._screen())
 		hud.set_score(self.hero().score())
 		hud.draw()
-		
+	
 	def hero(self):
 		if self.__hero is None:
 			self.__hero = Hero((300, 400))
@@ -81,7 +97,11 @@ class Game:
 			coin2 = Coin((75, 83))
 			self.__coins = pygame.sprite.RenderUpdates((coin1, coin2))
 		return self.__coins
-		
+	
+	def monsters(self):
+		if self.__monsters is None:
+			self.__monsters = [Bee((600, 200)), Bee((200, 400))]
+		return self.__monsters
 	
 	def _background(self):
 		if self.__background is None:
