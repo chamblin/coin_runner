@@ -10,6 +10,8 @@ from coin import Coin
 from hero import Hero
 from hud import HUD
 
+from music import Music
+
 from bee import Bee
 
 if not pygame.font: print "Warning: fonts disabled"
@@ -33,6 +35,8 @@ class Game:
 		self._screen().blit(self._background(), (0, 0))
 		pygame.display.flip()
 		clock = pygame.time.Clock()
+		music = Music()
+		music.play()
 		while 1:
 			clock.tick()
 			
@@ -60,7 +64,7 @@ class Game:
 	
 	def _draw_hero(self):
 		heroes = self.hero_group()
-		heroes.update(pygame.time.get_ticks(), self.coins().sprites())
+		heroes.update(pygame.time.get_ticks(), self.coins().sprites() + self.monsters())
 		heroes.draw(self._screen())
 	
 	def _draw_coins(self):
